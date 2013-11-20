@@ -1,0 +1,1 @@
+Funkcija za raèunanje Bayesovega klasifikatorja za atribute z diskretnimi in normlano porazdeljenimi vrednostmi

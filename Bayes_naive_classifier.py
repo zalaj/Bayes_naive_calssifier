@@ -253,11 +253,13 @@ def bayes_naive_class (csv_file, test_record, class_variable):
     
 
 #########################################   
-test_record = {'Home owner':'No','Maritual status': 'Married', 'Annual income': 120}
-class_variable='Default borrower'
+test_record_1 = {'Home owner':'No','Maritual status': 'Married', 'Annual income': 120}
+class_variable_1='Default borrower'
+vaja = bayes_naive_class ('vaja_podatki.csv', test_record_1, class_variable_1)
 
-vaja = bayes_naive_class ('vaja_podatki.csv', test_record, class_variable)
-
+test_record_2 = {'age':80,'marital':'single','education':'tertiary', 'default':'No', 'balance':3000,'housing':'Yes', 'loan':'No'}
+class_variable_2 = 'y'
+test = vaja = bayes_naive_class ('vaja_bank.csv', test_record_2, class_variable_2)
     
     
 

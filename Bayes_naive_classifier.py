@@ -247,25 +247,73 @@ def bayes_naive_class (csv_file, test_record, class_variable):
             p_Yes.append(p['Yes'])
             p_No.append(p['No'])
 
+    print('Stara varianta')
+    print(p_Yes, p_No)
+    
     ##posteriorna verjetnost je produkt vseh pogojnih verjetnosti in priorne verjetnosti
     post_yes = prod(p_Yes)*prior_distr['Yes']
     post_no = prod(p_No)*prior_distr['No']
 
+    print(post_yes,post_no)
     if post_yes > post_no:
         return('Yes')
     else:
         return('No')
-    
+
+#####---
+##Funkcija za bayes
+####---
+
+def bayes_naive_class_l (csv_file, test_record, class_variable):
+
+    ##csv_file = csv datoteka, ki vsebuje podatke
+    ##test_record = slovar podatkov za katere iščemo napoved
+    ##class_variable = class glede na katerega gledamo pogojne verjetNosti
+
+
+    training_data = read_csv(csv_file)    
+    unique = unique_values(training_data)
+    clas = unique.get(class_variable)
+
+    prior_distr = prior(training_data, class_variable)
+
+    p={}
+    for c in clas:
+        p[c]=[]
+
+
+    for atribute in test_record:
+        
+        if len(unique[atribute])<=5:
+            x_i = test_record[atribute]
+            disc = discrete (training_data, atribute, class_variable, x_i)
+
+            for c in clas:
+                p[c].append(disc[c])
+
+        else:
+            x_i = int(test_record[atribute])
+            norm = Normal(training_data, atribute, class_variable, x_i)
+
+            for c in clas:
+                p[c].append(norm[c])
+
+    ##posteriorna verjetnost je produkt vseh pogojnih verjetnosti in priorne verjetnosti
+
+    posterior={}
+
+    for c in clas:
+        posterior[c]= prod(p[c]) * prior_distr[c]
+
+    return(posterior)    
 
 #########################################   
 test_record_1 = {'Home owner':'No','Maritual status': 'Married', 'Annual income': 120}
 class_variable_1='Default borrower'
-vaja = bayes_naive_class ('vaja_podatki.csv', test_record_1, class_variable_1)
+test_l = bayes_naive_class_l ('vaja_podatki.csv', test_record_1, class_variable_1)
+test = bayes_naive_class ('vaja_podatki.csv', test_record_1, class_variable_1)
 
-test_record_2 = {'age':80,'marital':'single','education':'tertiary', 'default':'No', 'balance':3000,'housing':'Yes', 'loan':'No'}
-class_variable_2 = 'y'
-test = vaja = bayes_naive_class ('vaja_bank.csv', test_record_2, class_variable_2)
-    
+
     
 
 

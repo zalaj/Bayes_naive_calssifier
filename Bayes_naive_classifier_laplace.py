@@ -34,7 +34,9 @@ def read_csv (csv_file):
         rownum=rownum+1
     return(training_data)
 
-training_data = read_csv('vaja_podatki.csv') 
+training_data = read_csv('vaja_podatki.csv')
+test_data = read_csv('vaja_bank_short.csv')
+
 ##-------
 ##Funkcija, ki iz slovarja s CSV vrne zalogo unique vredNosti za vsak atribut
 ##-------
@@ -80,7 +82,8 @@ def discrete(training_data, atribute, class_variable, test_record):
     clas = unique.get(class_variable)
         
     p={}
-    freq = {} 
+    freq = {}
+    
     for c in clas:
         p[c] = 0
         freq[c] = 0
@@ -107,16 +110,27 @@ def discrete(training_data, atribute, class_variable, test_record):
 
     return(p)
 
-d = discrete(training_data,'Home owner', 'Default borrower', 'No')
-e = discrete(training_data,'Home owner', 'Default borrower', 'Yes')
-f = discrete(training_data,'Maritual status', 'Default borrower', 'Married')
-g= discrete(training_data,'Maritual status', 'Default borrower', 'Divorced')
-h = discrete(training_data,'Maritual status', 'Default borrower', 'Single')
+
+d = discrete (test_data, 'education', 'y', 'No')
+##d = discrete(training_data,'Home owner', 'Default borrower', 'No')
+##e = discrete(training_data,'Home owner', 'Default borrower', 'Yes')
+##f = discrete(training_data,'Maritual status', 'Default borrower', 'Married')
+##g= discrete(training_data,'Maritual status', 'Default borrower', 'Divorced')
+##h = discrete(training_data,'Maritual status', 'Default borrower', 'Single')
+
+##-------
+##
+##----
+def list_int(list):
+    
+    return([int(i) for i in list])
+
 ##-------
 ##Funkcija, ki izrčuna upanje vredNosti v nizu
 ##----
 def mean(list):
     
+    list = list_int(list)
     mean = sum(list)/len(list)
     return(mean)
 
@@ -125,9 +139,12 @@ def mean(list):
 ##Funkcija, ki izrčuna standardni odklon vredNosti v nizu
 ##----
 def sd(list):
+
+    list = list_int(list)
     
     m = mean(list)
     sd=[]
+
     for i in list:
         sd.append((i-m)**2)
     sd=sum(sd)/(len(sd)-1)
@@ -146,7 +163,8 @@ def p_Normal (ident, mean, sd):
     return(p)
     
 
-##-------
+
+######-------
 ##Funkcija, ki izrčuna pogojne verjetNosti za atribute z NormalNo porazdelitvijo
 ##----
 
@@ -159,17 +177,19 @@ def Normal(training_data, atribute, class_variable, test_record):
     ##clas - tisti razred za katerega delamo posterior 
 
     ##funkcija z unique vredNostmi za atrinute in zaloga vredNosti 
-    unique=unique_values(training_data)  
-    z_vr = unique.get(atribute)
+    unique=unique_values(training_data)
 
+    #vrnemo integer za zalogo vrednosti
+    z_vr = list_int(unique.get(atribute))
+
+    
     #podatki za iskani atribut 
-    data_a = training_data.get(atribute)
+    data_a = list_int(training_data.get(atribute))
 
     #podatki za identifikator
     data_i = training_data.get(class_variable)
     clas = unique.get(class_variable)
-
-
+    
     #slovarja za štetje frekvenc in verjetnosti
     p_data={}
     freq = {}
@@ -196,25 +216,28 @@ def Normal(training_data, atribute, class_variable, test_record):
         p[c]=(p_Normal(test_record,m,s))
 
     return(p)
+
+n = Normal(test_data, 'balance', 'y', 6500)
            
 ###----
 ##Funkcija za prior
 ###---
 def prior(training_data, class_variable):
 
+    unique=unique_values(training_data)
     c_variable= training_data[class_variable]
     clas = unique.get(class_variable)
-    
+
     p={}
+    
     for c in clas:
         
         p[c]= c_variable.count(c)/len(c_variable)
-
     
     return(p)
 
-p=prior(training_data, 'Home owner')
-r = prior(training_data, 'Maritual status')
+p=prior(training_data, 'Default borrower')
+r = prior(test_data, 'y')
 
 ###----
 ##Produkt
@@ -226,10 +249,23 @@ def prod(list):
     for i in list:
        p*=i
     return(p)
+
+
+###---
+##Funkcija za posterior
+###----
+
+def posterior(clas, prior):
+
+    posterior={}
+
+    for c in clas:
+        posterior[c]= prod(p[c]) * prior_distr[c]
+
+    return(posterior)
     
-    
-#####---
-##Funkcija za bayes
+###---
+###Funkcija za bayes
 ####---
 
 def bayes_naive_class (csv_file, test_record, class_variable):
@@ -241,46 +277,47 @@ def bayes_naive_class (csv_file, test_record, class_variable):
 
     training_data = read_csv(csv_file)    
     unique = unique_values(training_data)
+    clas = unique.get(class_variable)
 
     prior_distr = prior(training_data, class_variable)
-    
-    p_Yes=[]
-    p_No=[]
 
+    p={}
+
+    for c in clas:
+        p[c] = []
+    
     for atribute in test_record:
         
         if len(unique[atribute])<=5:
             x_i = test_record[atribute]
-            p = discrete (training_data, atribute, class_variable, x_i)
-            p_Yes.append(p['Yes'])
-            p_No.append(p['No'])
+            disc = discrete (training_data, atribute, class_variable, x_i)
+
+            for c in clas:
+                p[c].append(disc[c])
 
         else:
             x_i = int(test_record[atribute])
-            p = Normal(training_data, atribute, class_variable, x_i)
-            p_Yes.append(p['Yes'])
-            p_No.append(p['No'])
+            norm = Normal(training_data, atribute, class_variable, x_i)
+
+            for c in clas:
+                p[c].append(norm[c])
 
     ##posteriorna verjetnost je produkt vseh pogojnih verjetnosti in priorne verjetnosti
-    post_yes = prod(p_Yes)*prior_distr['Yes']
-    post_no = prod(p_No)*prior_distr['No']
 
-    if post_yes > post_no:
-        return('Yes')
-    else:
-        return('No')
+    posterior={}
+
+    for c in clas:
+        posterior[c]= prod(p[c]) * prior_distr[c]
+
+    return(posterior)
     
 
-#########################################   
-##test_record_1 = {'Home owner':'No','Maritual status': 'Married', 'Annual income': 120}
-##class_variable_1='Default borrower'
-##vaja = bayes_naive_class ('vaja_podatki.csv', test_record_1, class_variable_1)
+#######################################   
+test_record_1 = {'Home owner':'No','Maritual status': 'Married', 'Annual income': 120}
+class_variable_1='Default borrower'
+test= bayes_naive_class('vaja_podatki.csv', test_record_1, class_variable_1)
 
-##test_record_2 = {'age':80,'marital':'single','education':'tertiary', 'default':'No', 'balance':3000,'housing':'Yes', 'loan':'No'}
-##class_variable_2 = 'y'
-##test = vaja = bayes_naive_class ('vaja_bank.csv', test_record_2, class_variable_2)
-    
-    
+test_record_2 = {'age':80,'marital':'single','education':'tertiary', 'default':'No', 'balance':3000,'housing':'Yes', 'loan':'No'}
+class_variable_2 = 'y'
+bank_short = bayes_naive_class('vaja_bank.csv', test_record_2, class_variable_2)
 
-
-            

@@ -51,6 +51,7 @@ def unique_values(training_data):
         unique_values[col]= list(set(training_data[col]))
     return(unique_values)
 
+unique=unique_values(training_data) 
 
 ##-------
 ##Funkcija, ki izrčuna pogojne verjetNosti za atribute z diskretnimi vredNostmi
@@ -63,8 +64,9 @@ def discrete(training_data, atribute, class_variable, test_record):
     ##training_data - slovar, kjer so ključi atributi, vredNosti pa so seznam vredNosti
     ##atribute - atrinut za katerega išečmo pogojne verjetNosti
     ##class_variable = atribut glede na katerega iščemo pogojNo verjetNost (DEFAULT BORROWER)
-
     ##pokličemo funkcijo z unique vredNostmi za atrinute in zaloga vredNosti 
+    ##vrednost classa bo že podana kot zadnji stolpec v podatkih
+    
     unique=unique_values(training_data)  
     z_vr = unique.get(atribute)
 
@@ -73,6 +75,9 @@ def discrete(training_data, atribute, class_variable, test_record):
 
     #podatki za identifikator
     data_i = training_data.get(class_variable)
+
+    #clas je zadnji stolpec v podatkih
+ ##   unique = unique.get(clas)
     
     p={}
     p['Yes']=0

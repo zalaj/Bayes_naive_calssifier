@@ -1,0 +1,73 @@
+=== Run information ===
+
+Scheme:weka.classifiers.bayes.NaiveBayesSimple 
+Relation:     whatever
+Instances:    10
+Attributes:   4
+              Home owner
+              Maritual status
+              Annual income
+              Default borrower
+Test mode:evaluate on training data
+
+=== Classifier model (full training set) ===
+
+Naive Bayes (simple)
+
+Class No: P(C) = 0.66666667
+
+Attribute Home owner
+Yes	No	
+0.44444444	0.55555556	
+
+Attribute Maritual status
+Single	Married	Divorced	
+0.3       	0.5       	0.2       	
+
+Attribute Annual income
+Mean: 110	Standard Deviation: 54.54356057
+
+
+
+Class Yes: P(C) = 0.33333333
+
+Attribute Home owner
+Yes	No	
+0.2       	0.8       	
+
+Attribute Maritual status
+Single	Married	Divorced	
+0.5       	0.16666667	0.33333333	
+
+Attribute Annual income
+Mean: 90	Standard Deviation: 5         
+
+
+
+Time taken to build model: 0 seconds
+
+=== Evaluation on training set ===
+=== Summary ===
+
+Correctly Classified Instances          10              100      %
+Incorrectly Classified Instances         0                0      %
+Kappa statistic                          1     
+Mean absolute error                      0.0582
+Root mean squared error                  0.0989
+Relative absolute error                 13.4252 %
+Root relative squared error             21.5345 %
+Total Number of Instances               10     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 1         0          1         1         1          1        No
+                 1         0          1         1         1          1        Yes
+Weighted Avg.    1         0          1         1         1          1    
+
+=== Confusion Matrix ===
+
+ a b   <-- classified as
+ 7 0 | a = No
+ 0 3 | b = Yes
+

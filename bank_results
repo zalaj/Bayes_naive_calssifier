@@ -1,0 +1,107 @@
+=== Run information ===
+
+Scheme:weka.classifiers.bayes.NaiveBayesSimple 
+Relation:     whatever
+Instances:    3682
+Attributes:   8
+              age
+              marital
+              education
+              default
+              balance
+              housing
+              loan
+              y
+Test mode:10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+Naive Bayes (simple)
+
+Class No: P(C) = 0.88653637
+
+Attribute age
+Mean: 41.02082695	Standard Deviation: 10.27237192
+
+Attribute marital
+married	single	divorced	
+0.63035496	0.25795594	0.11168911	
+
+Attribute education
+primary	secondary	tertiary	unkNown	
+0.1547874 	0.51116549	0.29060875	0.04343836	
+
+Attribute default
+No	Yes	
+0.98347107	0.01652893	
+
+Attribute balance
+Mean: 1354.91852986	Standard Deviation: 2820.96404918
+
+Attribute housing
+No	Yes	
+0.41628405	0.58371595	
+
+Attribute loan
+No	Yes	
+0.83318029	0.16681971	
+
+
+
+Class Yes: P(C) = 0.11346363
+
+Attribute age
+Mean: 42.20623501	Standard Deviation: 12.92436055
+
+Attribute marital
+married	single	divorced	
+0.53571429	0.32380952	0.14047619	
+
+Attribute education
+primary	secondary	tertiary	unkNown	
+0.11401425	0.47030879	0.3824228 	0.03325416	
+
+Attribute default
+No	Yes	
+0.98090692	0.01909308	
+
+Attribute balance
+Mean: 1702.18705036	Standard Deviation: 2611.66537156
+
+Attribute housing
+No	Yes	
+0.58949881	0.41050119	
+
+Attribute loan
+No	Yes	
+0.92124105	0.07875895	
+
+
+
+Time taken to build model: 0.02 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances        3258               88.4845 %
+Incorrectly Classified Instances       424               11.5155 %
+Kappa statistic                          0.0385
+Mean absolute error                      0.1948
+Root mean squared error                  0.3133
+Relative absolute error                 96.9182 %
+Root relative squared error             98.8488 %
+Total Number of Instances             3682     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.994     0.971      0.889     0.994     0.939      0.645    No
+                 0.029     0.006      0.387     0.029     0.054      0.645    Yes
+Weighted Avg.    0.885     0.862      0.832     0.885     0.838      0.645
+
+=== Confusion Matrix ===
+
+    a    b   <-- classified as
+ 3246   19 |    a = No
+  405   12 |    b = Yes
+

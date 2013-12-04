@@ -36,7 +36,7 @@ def read_csv (csv_file):
 
 training_data = read_csv('vaja_podatki.csv')
 test_data = read_csv('vaja_bank_short.csv')
-
+bank = read_csv('vaja_bank.csv')
 ##-------
 ##Funkcija, ki iz slovarja s CSV vrne zalogo unique vredNosti za vsak atribut
 ##-------
@@ -110,12 +110,17 @@ def discrete(training_data, atribute, class_variable, atribute_value):
     return(p)
 
 
-#d = discrete (test_data, 'education', 'y', 'No')
+
 d = discrete(training_data,'Home owner', 'Default borrower', 'No')
 e = discrete(training_data,'Home owner', 'Default borrower', 'Yes')
-##f = discrete(training_data,'Maritual status', 'Default borrower', 'Married')
+f = discrete(training_data,'Maritual status', 'Default borrower', 'Married')
 ##g= discrete(training_data,'Maritual status', 'Default borrower', 'Divorced')
 ##h = discrete(training_data,'Maritual status', 'Default borrower', 'Single')
+
+loan = discrete(bank, 'loan', 'y', 'No')
+housing = discrete(bank, 'housing', 'y', 'Yes')
+education = discrete(bank, 'housing', 'y', 'primary')
+marital = discrete(bank, 'marital', 'y', 'married')
 
 ##-------
 ## Fukcija, ki spremeni seznam v seznam s samo integer
@@ -241,6 +246,7 @@ def prior(training_data, class_variable):
 
 p=prior(training_data, 'Default borrower')
 r = prior(test_data, 'y')
+p_bank = prior(bank,'y')
 
 ###----
 ##Produkt
@@ -290,20 +296,25 @@ def bayes_naive_class (csv_file, test_record, class_variable):
         p[c] = []
     
     for atribute in test_record:
+
+        if (len(unique[atribute])>=5
+        and
+        all(isinstance(x,int) for x in unique[atribute])):
         
-        if len(unique[atribute])<=5:
+            x_i = int(test_record[atribute])
+            norm = Normal(training_data, atribute, class_variable, x_i)
+
+            for c in clas:
+                p[c].append(norm[c])
+        
+        else:
             x_i = test_record[atribute]
             disc = discrete (training_data, atribute, class_variable, x_i)
 
             for c in clas:
                 p[c].append(disc[c])
 
-        else:
-            x_i = int(test_record[atribute])
-            norm = Normal(training_data, atribute, class_variable, x_i)
-
-            for c in clas:
-                p[c].append(norm[c])
+           
 
     ##posteriorna verjetnost je produkt vseh pogojnih verjetnosti in priorne verjetnosti
 

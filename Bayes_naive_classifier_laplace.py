@@ -323,6 +323,7 @@ def bayes_naive_class (csv_file, test_record, class_variable):
     for c in clas:
         posterior[c]= prod(p[c]) * prior_distr[c]
 
+    print('Klasifikator je:%s ' %(posterior))
     return(posterior)
     
 

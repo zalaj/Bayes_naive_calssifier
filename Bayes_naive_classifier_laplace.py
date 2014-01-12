@@ -323,16 +323,22 @@ def bayes_naive_class (csv_file, test_record, class_variable):
     for c in clas:
         posterior[c]= prod(p[c]) * prior_distr[c]
 
-    print('Klasifikator je:%s ' %(posterior))
+    prob = 0 
+    for c in posterior:
+        if posterior.get(c)>prob:
+            prob = posterior.get(c)
+            prediction = c
+    
+    print('Napovedan razred za izbrane atribute je %s. Posteriorna verjetnost za razrede je :%s ' %(prediction, posterior))
     return(posterior)
     
 
 #######################################   
-test_record_1 = {'Home owner':'No','Maritual status': 'Married', 'Annual income': 120}
-class_variable_1='Default borrower'
-test= bayes_naive_class('vaja_podatki.csv', test_record_1, class_variable_1)
+##test_record_1 = {'Home owner':'No','Maritual status': 'Married', 'Annual income': 120}
+##class_variable_1='Default borrower'
+##test= bayes_naive_class('vaja_podatki.csv', test_record_1, class_variable_1)
 
-test_record_2 = {'age':80,'marital':'single','education':'tertiary', 'default':'No', 'balance':3000,'housing':'Yes', 'loan':'No'}
+predict = {'age':24,'marital':'single','education':'tertiary', 'default':'No', 'balance':3000,'housing':'No', 'loan':'No'}
 class_variable_2 = 'y'
-bank_short = bayes_naive_class('vaja_bank.csv', test_record_2, class_variable_2)
+bank_short = bayes_naive_class('vaja_bank.csv', predict, class_variable_2)
 
